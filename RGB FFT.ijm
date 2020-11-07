@@ -1,29 +1,32 @@
 //return current image to "image" variable
 image = getImageID();
+originalimage = getTitle();
 
 //check if image is RGB. if not, exit.
 if (bitDepth() != 24) 
-	exit ("8 bit image required."); 
+	exit ("Error: RGB Color image required."); 
 
 //duplicate the image and split the RGB channels
 run("Duplicate...", " ");
-imageTitle = getTitle();
+selectWindow(originalimage);
 run("Split Channels");
 
-selectWindow(imageTitle + " (red)");
+//FFT each color channel individually, then close the channel image
+selectWindow(originalimage + " (red)");
 run("FFT");
-selectWindow(imageTitle + " (red)");
+selectWindow(originalimage + " (red)");
 close();
 
-selectWindow(imageTitle + " (green)");
+selectWindow(originalimage + " (green)");
 run("FFT");
-selectWindow(imageTitle + " (green)");
+selectWindow(originalimage + " (green)");
 close();
 
-selectWindow(imageTitle + " (blue)");
+selectWindow(originalimage + " (blue)");
 run("FFT");
-selectWindow(imageTitle + " (blue)");
+selectWindow(originalimage + " (blue)");
 close();
 
-run("Merge Channels...", "c1=[FFT of "+imageTitle+" (red)] c2=[FFT of "+imageTitle+" (green)] c3=[FFT of "+imageTitle+" (blue)] create");
-
+//merge the single-channel FFT, rename it
+run("Merge Channels...", "c1=[FFT of "+originalimage+" (red)] c2=[FFT of "+originalimage+" (green)] c3=[FFT of "+originalimage+" (blue)] keep");
+rename('RGB FFT of ' + originalimage);
